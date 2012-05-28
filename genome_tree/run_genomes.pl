@@ -77,7 +77,7 @@ sub check_params {
     exec("pod2usage $0") if $options{'help'};
     exec("perldoc $0")   if $options{'man'};
     exec("pod2usage $0") if (!( $options{'d'}));
-    if ($options{'a'} < 1) {
+    if (($options{'a'}) && ($options{'a'} < 1)) {
         die "Number of threads (-a) must be a positive integer. Got " . $options{'a'} . "\n";
     }
     return \%options;
@@ -91,19 +91,14 @@ __DATA__
    
 =head1 DESCRIPTION
 
-    Given an aligned fasta file (a FASTA file where all entries are aligned
-    against each other) and trim points, this script will create an aligned
-    FASTA file. All entries will be trimmed based on the absolute positions of
-    the sequences in the alignment, or relative to the (unaligned) nucleotide
-    positions of a specific entry in the file if an ID is specified.
-
+    Calls Phylosift on a directory containing protein fasta files, and produces
+    multiple alignments.
+    
 =head1 SYNOPSIS
 
-    aligned_fasta_subseq.pl -f <aligned_fasta> [-tr int[,int]] [-id <fasta_id>]
+    aligned_fasta_subseq.pl -d <input_directory> [-a <num_threads>]
         [-help] [-man]
 
-        -f      Input aligned FASTA.
-        -tr     Trim points (either 'start' or 'start, stop'). Relative if -id
-                is specified, absolute otherwise.
-        -id     Identifier for relative position.
+        -d      Directory of protein fasta files (1 file per genome)
+        -a      Number of threads to run.
 =cut

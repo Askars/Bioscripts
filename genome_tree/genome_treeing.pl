@@ -99,23 +99,19 @@ __DATA__
 
 =head1 NAME
 
-    aligned_fasta_subseq.pl
+    genome_treeing.pl
    
 =head1 DESCRIPTION
 
-    Given an aligned fasta file (a FASTA file where all entries are aligned
-    against each other) and trim points, this script will create an aligned
-    FASTA file. All entries will be trimmed based on the absolute positions of
-    the sequences in the alignment, or relative to the (unaligned) nucleotide
-    positions of a specific entry in the file if an ID is specified.
+    After running run_genomes.pl (which calls Phylosift), pass the results/
+    directory to create a multiple aligned fasta of the concatenated marker
+    sequences.
 
 =head1 SYNOPSIS
 
-    aligned_fasta_subseq.pl -f <aligned_fasta> [-tr int[,int]] [-id <fasta_id>]
+    genome_treeing.pl -d <results_directory>
         [-help] [-man]
 
-        -f      Input aligned FASTA.
-        -tr     Trim points (either 'start' or 'start, stop'). Relative if -id
-                is specified, absolute otherwise.
-        -id     Identifier for relative position.
+        -d      Results directory produced by run_genomes.pl
+
 =cut
