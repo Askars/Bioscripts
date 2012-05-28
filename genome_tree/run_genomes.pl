@@ -27,7 +27,9 @@ if (! -d $options->{'d'}) {
 my @files;
 opendir(my $dh, $options->{'d'});
 while (my $protein_file = readdir($dh)) {
-    push @files, $protein_file;
+    if (-f $options->{'d'} . "/$protein_file") {
+        push @files, $protein_file;
+    }
 }
 closedir($dh);
 
@@ -35,7 +37,7 @@ foreach my $protein_file (@files) {
     # Loop infinitely until there is a spare thread for processing.
     while (1) {
         if (threads->list(threads::all) < $MAX_THREADS) {
-            threads->create('runPhylosift', ($options->{'d'} . $protein_file));
+            threads->create('runPhylosift', ($options->{'d'} . $protein_file, $options->{'o'}));
             print STDERR $protein_file, "\n";
             last;
         } else {
