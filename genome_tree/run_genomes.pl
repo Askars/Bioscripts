@@ -57,9 +57,14 @@ while (threads->list(threads::all) > 0) {
 
 sub runPhylosift {
     my $protein_file = shift;
+    my $output_prefix = shift;
     my($filename, $directories, $suffix) = fileparse($protein_file);
-    system("$phylosift_bin search --besthit --output=$filename" ."_search $protein_file");
-    system("$phylosift_bin align --besthit --output=$filename" . "_search $protein_file");
+    my $output_folder = $filename ."_search";
+    if (defined($output_prefix)) {
+        $output_folder = "$output_prefix/$output_folder";
+    }
+    system("$phylosift_bin search --besthit --output=$output_folder $protein_file");
+    system("$phylosift_bin align --besthit --output=$output_folder $protein_file");
     return 0;
 }
 
@@ -73,10 +78,10 @@ sub runPhylosift {
 sub check_params {
     my @standard_options = ( "help+", "man+");
     my %options;
-    GetOptions( \%options, @standard_options, "d:s", "a:i");
+    GetOptions( \%options, @standard_options, "d:s", "a:i", "o:s");
     exec("pod2usage $0") if $options{'help'};
     exec("perldoc $0")   if $options{'man'};
-    exec("pod2usage $0") if (!( $options{'d'}));
+    exec("pod2usage $0") if (!( $options{'d'} && $options{'o'}));
     if (($options{'a'}) && ($options{'a'} < 1)) {
         die "Number of threads (-a) must be a positive integer. Got " . $options{'a'} . "\n";
     }
@@ -87,7 +92,7 @@ __DATA__
 
 =head1 NAME
 
-    
+    run_genomes.pl
    
 =head1 DESCRIPTION
 
@@ -96,9 +101,11 @@ __DATA__
     
 =head1 SYNOPSIS
 
-    aligned_fasta_subseq.pl -d <input_directory> [-a <num_threads>]
+    run_genomes.pl -d <input_dir> -o <output_dir> [-a <num_threads>] 
         [-help] [-man]
 
         -d      Directory of protein fasta files (1 file per genome)
+        -o      Directory to output results (defaults to .)
         -a      Number of threads to run.
+        
 =cut
